@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="nombres" />
+<meta name="author" content="Joaquina Altamirano y Federico Montagna" />
 
 
-<title>titulo</title>
+<title>TP N°1</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -362,20 +362,46 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">titulo</h1>
-<h4 class="author">nombres</h4>
+<h1 class="title toc-ignore">TP N°1</h1>
+<h4 class="author">Joaquina Altamirano y Federico Montagna</h4>
 
 </div>
 
 
 <div id="introducción" class="section level2">
 <h2>Introducción</h2>
+<p>El objetivo de la librería presentes es poner a disposición la
+información oficial sobre víctimas del terrorismo de estado provista
+en:</p>
+<p><a href="http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte" class="uri">http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte</a><br />
+<a href="https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe" class="uri">https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe</a><br />
+<a href="http://basededatos.parquedelamemoria.org.ar/registros/" class="uri">http://basededatos.parquedelamemoria.org.ar/registros/</a></p>
+<p>De la primera pagina surgen los datos sobre victimas del accionar
+represivo ilegal que figuran en el Registro Unificado de Victimas del
+Terrorismo de Estado (RUVTE). A partir de ella se construyeron las
+tablas “victimas_apodos”, “victimas_con_denuncia” y
+“victimas_sin_denuncia”.</p>
+<p>De la segunda surge la tabla CCDyT, con la informacion de los Centros
+Clandestinos de Detencion y Tortura.</p>
+<p>De la tercera surge una nueva tabla sobre victimas de Desaparicion,
+extraida del Parque de la Memoria.</p>
 </div>
 <div id="exploración-de-los-datos" class="section level2">
 <h2>Exploración de los datos</h2>
-<pre class="r"><code># Código para cargar o leer los datos</code></pre>
-<pre class="r"><code># Cödigo de R acá 
-# Agregá más bloques según sea necesario</code></pre>
+<pre class="r"><code>CCDyT &lt;- presentes::centros_clandestinos_detencion
+victimas_apodos &lt;- presentes::apodos
+victimas_con_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal
+victimas_sin_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal_sin_denuncia_formal
+victimas_pm &lt;- presentes::parque_de_la_memoria</code></pre>
+</div>
+<div id="edad-al-momento-de-la-desaparicion" class="section level2">
+<h2>Edad al momento de la desaparicion</h2>
+</div>
+<div id="fecha-de-secuestro" class="section level2">
+<h2>Fecha de secuestro</h2>
+</div>
+<div id="fecha-de-asesinato-o-hallazgo-de-restos" class="section level2">
+<h2>Fecha de asesinato o hallazgo de restos</h2>
 </div>
 <div id="hipótesis" class="section level2">
 <h2>Hipótesis</h2>

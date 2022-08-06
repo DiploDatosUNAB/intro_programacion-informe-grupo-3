@@ -1,6 +1,6 @@
 ---
-title: "titulo"
-author: "nombres"
+title: "TP N°1"
+author: "Joaquina Altamirano y Federico Montagna"
 output: html_document
 ---
 
@@ -8,26 +8,50 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # Cargar los paquetes necesarios acá
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(presentes)
 ```
-
 
 ## Introducción
 
+El objetivo de la librería presentes es poner a disposición la información oficial sobre víctimas del terrorismo de estado provista en:
+
+http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte  
+https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe  
+http://basededatos.parquedelamemoria.org.ar/registros/ 
+
+De la primera pagina surgen los datos sobre victimas del accionar represivo ilegal que figuran en el Registro Unificado de Victimas del Terrorismo de Estado (RUVTE). A partir de ella se construyeron las tablas "victimas_apodos", "victimas_con_denuncia" y "victimas_sin_denuncia".
+
+De la segunda surge la tabla CCDyT, con la informacion de los Centros Clandestinos de Detencion y Tortura.
+
+De la tercera surge una nueva tabla sobre victimas de Desaparicion, extraida del Parque de la Memoria.
 
 
 ## Exploración de los datos
 
-
 ```{r}
-# Código para cargar o leer los datos
+CCDyT <- presentes::centros_clandestinos_detencion
+victimas_apodos <- presentes::apodos
+victimas_con_denuncia <- presentes::victimas_accionar_represivo_ilegal
+victimas_sin_denuncia <- presentes::victimas_accionar_represivo_ilegal_sin_denuncia_formal
+victimas_pm <- presentes::parque_de_la_memoria
 ```
 
 
-
+## Edad al momento de la desaparicion
 ```{r}
-# Cödigo de R acá 
-# Agregá más bloques según sea necesario
+
 ```
+
+
+## Fecha de secuestro
+
+
+## Fecha de asesinato o hallazgo de restos
+
+
 
 
 
