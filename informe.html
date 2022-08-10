@@ -370,9 +370,9 @@ pre code {
 
 <div id="introducción" class="section level2">
 <h2>Introducción</h2>
-<p>El objetivo de la librería presentes es poner a disposición la
-información oficial sobre víctimas del terrorismo de estado provista
-en:</p>
+<p>Los datos del presente informe fueron extraidos de la librería
+“Presentes”, cuyo objetivo es poner a disposición la información oficial
+sobre víctimas del terrorismo de estado provista en:</p>
 <p><a href="http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte" class="uri">http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte</a><br />
 <a href="https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe" class="uri">https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe</a><br />
 <a href="http://basededatos.parquedelamemoria.org.ar/registros/" class="uri">http://basededatos.parquedelamemoria.org.ar/registros/</a></p>
@@ -388,11 +388,18 @@ extraida del Parque de la Memoria.</p>
 </div>
 <div id="exploración-de-los-datos" class="section level2">
 <h2>Exploración de los datos</h2>
-<pre class="r"><code>CCDyT &lt;- presentes::centros_clandestinos_detencion
+<pre class="r"><code>#Bases de datos disponibles
+CCDyT &lt;- presentes::centros_clandestinos_detencion
 victimas_apodos &lt;- presentes::apodos
 victimas_con_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal
 victimas_sin_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal_sin_denuncia_formal
 victimas_pm &lt;- presentes::parque_de_la_memoria</code></pre>
+<pre class="r"><code># victimas_ con_denuncia - cuantas variables tiene, cuantas observaciones 
+victimas_con_denuncia |&gt;
+  summarise(cantidad = n())</code></pre>
+<pre><code>##   cantidad
+## 1     8753</code></pre>
+<pre class="r"><code>#Tiene 21 variables</code></pre>
 </div>
 <div id="edad-al-momento-de-la-desaparicion" class="section level2">
 <h2>Edad al momento de la desaparicion</h2>
