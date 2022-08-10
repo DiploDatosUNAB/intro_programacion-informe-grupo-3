@@ -368,8 +368,8 @@ pre code {
 </div>
 
 
-<div id="introducción" class="section level2">
-<h2>Introducción</h2>
+<div id="introducción" class="section level1">
+<h1>Introducción</h1>
 <p>Los datos del presente informe fueron extraidos de la librería
 “Presentes”, cuyo objetivo es poner a disposición la información oficial
 sobre víctimas del terrorismo de estado provista en:</p>
@@ -386,20 +386,38 @@ Clandestinos de Detencion y Tortura.</p>
 <p>De la tercera surge una nueva tabla sobre victimas de Desaparicion,
 extraida del Parque de la Memoria.</p>
 </div>
-<div id="exploración-de-los-datos" class="section level2">
-<h2>Exploración de los datos</h2>
+<div id="exploración-de-los-datos" class="section level1">
+<h1>Exploración de los datos</h1>
 <pre class="r"><code>#Bases de datos disponibles
 CCDyT &lt;- presentes::centros_clandestinos_detencion
 victimas_apodos &lt;- presentes::apodos
 victimas_con_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal
 victimas_sin_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal_sin_denuncia_formal
 victimas_pm &lt;- presentes::parque_de_la_memoria</code></pre>
-<pre class="r"><code># victimas_ con_denuncia - cuantas variables tiene, cuantas observaciones 
+<div id="base-victimas_con_denuncia" class="section level2">
+<h2>Base Victimas_con_denuncia</h2>
+<pre class="r"><code># victimas_con_denuncia - cuantas variables tiene, cuantas observaciones 
 victimas_con_denuncia |&gt;
   summarise(cantidad = n())</code></pre>
 <pre><code>##   cantidad
 ## 1     8753</code></pre>
 <pre class="r"><code>#Tiene 21 variables</code></pre>
+<pre class="r"><code>#media y desvio standar de la variable edad al momento del hecho
+victimas_con_denuncia |&gt;
+  filter(!is.na(edad_al_momento_del_hecho_numerico))|&gt;
+    summarise( 
+    edad_media = mean(edad_al_momento_del_hecho_numerico),
+    edad_sd = sd(edad_al_momento_del_hecho_numerico))</code></pre>
+<pre><code>##   edad_media  edad_sd
+## 1   28.08264 9.549192</code></pre>
+<pre class="r"><code>victimas_con_denuncia |&gt;
+  summarise(cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
+            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))</code></pre>
+<pre><code>##   cantidad_nas proporcion_nas
+## 1           77    0.008796984</code></pre>
+<p>La proporcion de datos faltantes es pequeña, por lo que se entiende
+que la media y el sd son representativos. No se como sacar las
+observaciones de la variable edad</p>
 </div>
 <div id="edad-al-momento-de-la-desaparicion" class="section level2">
 <h2>Edad al momento de la desaparicion</h2>
@@ -412,6 +430,7 @@ victimas_con_denuncia |&gt;
 </div>
 <div id="hipótesis" class="section level2">
 <h2>Hipótesis</h2>
+</div>
 </div>
 
 

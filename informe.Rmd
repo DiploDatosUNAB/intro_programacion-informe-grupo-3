@@ -14,7 +14,7 @@ library(ggplot2)
 library(presentes)
 ```
 
-## Introducción
+# Introducción
 
 Los datos del presente informe fueron extraidos de la librería "Presentes", cuyo objetivo es poner a disposición la información oficial sobre víctimas del terrorismo de estado provista en:
 
@@ -29,7 +29,7 @@ De la segunda surge la tabla CCDyT, con la informacion de los Centros Clandestin
 De la tercera surge una nueva tabla sobre victimas de Desaparicion, extraida del Parque de la Memoria.
 
 
-## Exploración de los datos
+# Exploración de los datos
 
 ```{r}
 #Bases de datos disponibles
@@ -40,18 +40,31 @@ victimas_sin_denuncia <- presentes::victimas_accionar_represivo_ilegal_sin_denun
 victimas_pm <- presentes::parque_de_la_memoria
 ```
 
-
+## Base Victimas_con_denuncia
 ```{r}
-# victimas_ con_denuncia - cuantas variables tiene, cuantas observaciones 
+# victimas_con_denuncia - cuantas variables tiene, cuantas observaciones 
 victimas_con_denuncia |>
   summarise(cantidad = n())
 #Tiene 21 variables
 ```
 
 ```{r}
-
+#media y desvio standar de la variable edad al momento del hecho
+victimas_con_denuncia |>
+  filter(!is.na(edad_al_momento_del_hecho_numerico))|>
+    summarise( 
+    edad_media = mean(edad_al_momento_del_hecho_numerico),
+    edad_sd = sd(edad_al_momento_del_hecho_numerico))
 ```
 
+
+```{r}
+victimas_con_denuncia |>
+  summarise(cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
+            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))
+```
+
+La proporcion de datos faltantes es pequeña, por lo que se entiende que la media y el sd son representativos. No se como sacar las observaciones de la variable edad
 
 ## Edad al momento de la desaparicion
 ```{r}
