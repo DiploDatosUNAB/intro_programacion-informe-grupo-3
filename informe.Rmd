@@ -32,55 +32,144 @@ De la tercera surge una nueva tabla sobre victimas de Desaparicion, extraida del
 # Exploración de los datos
 
 ```{r}
-#Bases de datos disponibles
-CCDyT <- presentes::centros_clandestinos_detencion
-victimas_apodos <- presentes::apodos
 victimas_con_denuncia <- presentes::victimas_accionar_represivo_ilegal
-victimas_sin_denuncia <- presentes::victimas_accionar_represivo_ilegal_sin_denuncia_formal
-victimas_pm <- presentes::parque_de_la_memoria
 ```
 
 ## Base Victimas_con_denuncia
+Para el presente TP, seleccionamos la base "victimas_con_denuncia", la cual conforma una tabla con 21 columnas y 8753 observaciones. Las 21 columnas estan conformadas por las variables: Año en que se realiza la denuncia, tipificación según el RUVTE, nombre y apellido paterno, apellido materno, apellido de casada, edad al momento del hecho, numero de documento, año de nacimiento, provincia de nacimiento (se encuentra de dos formas, una de acuerdo al INDEC), país de nacimiento (idem), nacionalidad, embarazo, fecha de detención/secuestro, lugar de detención/secuestro, fecha del asesinato o hallazgo de restos (según corresponda), lugar de asesinato o hallazgo de restos (según corresponda).
+
 ```{r}
-# victimas_con_denuncia - cuantas variables tiene, cuantas observaciones 
-victimas_con_denuncia |>
-  summarise(cantidad = n())
-#Tiene 21 variables
+head(victimas_con_denuncia)
 ```
 
 ```{r}
-#media y desvio standar de la variable edad al momento del hecho
+victimas_con_denuncia |>
+  summarise(cantidad = n())
+```
+
+
+## Tomaremos para su lectura, las variables:
+- Edad al momento del hecho
+- Fecha de secuestro
+- Fecha de asesinato o hallazgo de restos
+- Embarazos
+
+
+# Edad al momento del hecho
+#### Cantidad de Observaciones, faltantes, proporcion
+```{r}
+victimas_con_denuncia |>
+  summarise(cantidad_total = sum(!is.na(edad_al_momento_del_hecho_numerico),is.na(edad_al_momento_del_hecho_numerico)),
+            cantidad_obs = sum(!is.na(edad_al_momento_del_hecho_numerico)),
+            cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
+            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))
+```
+La proporcion de datos faltantes es pequeña, por lo que se entiende que la media y el sd son representativos.
+
+#### Media, desvio standar y rango
+```{r}
 victimas_con_denuncia |>
   filter(!is.na(edad_al_momento_del_hecho_numerico))|>
     summarise( 
     edad_media = mean(edad_al_momento_del_hecho_numerico),
-    edad_sd = sd(edad_al_momento_del_hecho_numerico))
+    edad_sd = sd(edad_al_momento_del_hecho_numerico),
+    edad_min = min(edad_al_momento_del_hecho_numerico),
+    edad_max = max(edad_al_momento_del_hecho_numerico))
+```
+
+#### Cantidad de observaciones por edad
+
+```{r}
+victimas_con_denuncia|>
+  group_by(edad_al_momento_del_hecho_numerico)|>
+  summarise(cantidad = n())
 ```
 
 
+
+
+
+
+# Fecha de secuestro
+#### Cantidad de Observaciones, faltantes, proporcion
 ```{r}
 victimas_con_denuncia |>
-  summarise(cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
-            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))
+  summarise(cantidad_total = sum(!is.na(fecha_detencion_secuestro),is.na(fecha_detencion_secuestro)),
+            cantidad_obs = sum(!is.na(fecha_detencion_secuestro)),
+            cantidad_nas = sum(is.na(fecha_detencion_secuestro)),
+            proporcion_nas = mean(is.na(fecha_detencion_secuestro)))
 ```
+La proporcion de datos faltantes es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
 
-La proporcion de datos faltantes es pequeña, por lo que se entiende que la media y el sd son representativos. No se como sacar las observaciones de la variable edad
-
-## Edad al momento de la desaparicion
+#### Cantidad de observaciones por fecha de detención/secuestro
 ```{r}
-
+victimas_con_denuncia|>
+  filter(!is.na(fecha_detencion_secuestro))|>
+  group_by(fecha_detencion_secuestro)|>
+  summarise(cantidad = n())
 ```
 
 
-## Fecha de secuestro
+
+
+
 
 
 ## Fecha de asesinato o hallazgo de restos
+#### Cantidad de Observaciones, faltantes, proporcion
+```{r}
+victimas_con_denuncia |>
+  summarise(cantidad_total = sum(!is.na(fecha_asesinato_o_hallazgo_de_restos),is.na(fecha_asesinato_o_hallazgo_de_restos)),
+            cantidad_obs = sum(!is.na(fecha_asesinato_o_hallazgo_de_restos)),
+            cantidad_nas = sum(is.na(fecha_asesinato_o_hallazgo_de_restos)),
+            proporcion_nas = mean(is.na(fecha_asesinato_o_hallazgo_de_restos)))
+```
+La proporcion de datos faltantes es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
+
+#### Cantidad de observaciones por fecha de asesinato/hallazgo del restos
+```{r}
+victimas_con_denuncia|>
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
+  group_by(fecha_asesinato_o_hallazgo_de_restos)|>
+  summarise(cantidad = n())
+```
 
 
+
+
+
+
+## Embarazos
+#### Cantidad de Observaciones, faltantes, proporcion
+```{r}
+victimas_con_denuncia |>
+  summarise(cantidad_total = sum(!is.na(embarazo),is.na(embarazo)),
+            cantidad_obs = sum(!is.na(embarazo)),
+            cantidad_nas = sum(is.na(embarazo)),
+            proporcion_nas = mean(is.na(embarazo)))
+```
+En el caso de la variable "embarazo", la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
+
+#### Cantidad de observaciones
+```{r}
+victimas_con_denuncia|>
+  filter(!is.na(embarazo))|>
+  group_by(embarazo)|>
+  summarise(cantidad = n())
+```
 
 
 
 ## Hipótesis
+
+1) Los primeros años del Proceso de Reorganización Nacional configuraron el momento de mayor cantidad de víctimas de procesos de detención/secuestro/desaparición.
+
+2) En los primeros años de la dictadura militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.
+
+3) ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
+
+
+
+
 
 

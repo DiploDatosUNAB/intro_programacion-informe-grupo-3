@@ -80,7 +80,7 @@ No hace falta que sean párrafos largos; cada uno no debería tener más de 5-6 
 
 **Todos** los resultados presentados deben tener su código correspondiente.
 Cualquier respuesta/resultado presentado sin el correspondiente código R que generó el resultado no se considerará.
-Para ser claros: no reporten cosas en el documento que calcularon a mano o miraron por fuera de R (por ejemplo, si cuentan la cantidad de filas, tiene que estar elcódigo que cuenta la cantidad de filas).
+Para ser claros: no reporten cosas en el documento que calcularon a mano o miraron por fuera de R (por ejemplo, si cuentan la cantidad de filas, tiene que estar el código que cuenta la cantidad de filas).
 
 Es muy posible que tengan ganas de hacer algún cálculo y que no sepan cómo hacerlo en R.
 ¡En ese caso es mejor que consulten en el foro en vez de quedarse con las ganas!

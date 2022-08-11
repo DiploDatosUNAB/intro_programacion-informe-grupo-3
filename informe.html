@@ -388,48 +388,265 @@ extraida del Parque de la Memoria.</p>
 </div>
 <div id="exploración-de-los-datos" class="section level1">
 <h1>Exploración de los datos</h1>
-<pre class="r"><code>#Bases de datos disponibles
-CCDyT &lt;- presentes::centros_clandestinos_detencion
-victimas_apodos &lt;- presentes::apodos
-victimas_con_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal
-victimas_sin_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal_sin_denuncia_formal
-victimas_pm &lt;- presentes::parque_de_la_memoria</code></pre>
+<pre class="r"><code>victimas_con_denuncia &lt;- presentes::victimas_accionar_represivo_ilegal</code></pre>
 <div id="base-victimas_con_denuncia" class="section level2">
 <h2>Base Victimas_con_denuncia</h2>
-<pre class="r"><code># victimas_con_denuncia - cuantas variables tiene, cuantas observaciones 
-victimas_con_denuncia |&gt;
+<p>Para el presente TP, seleccionamos la base “victimas_con_denuncia”,
+la cual conforma una tabla con 21 columnas y 8753 observaciones. Las 21
+columnas estan conformadas por las variables: Año en que se realiza la
+denuncia, tipificación según el RUVTE, nombre y apellido paterno,
+apellido materno, apellido de casada, edad al momento del hecho, numero
+de documento, año de nacimiento, provincia de nacimiento (se encuentra
+de dos formas, una de acuerdo al INDEC), país de nacimiento (idem),
+nacionalidad, embarazo, fecha de detención/secuestro, lugar de
+detención/secuestro, fecha del asesinato o hallazgo de restos (según
+corresponda), lugar de asesinato o hallazgo de restos (según
+corresponda).</p>
+<pre class="r"><code>head(victimas_con_denuncia)</code></pre>
+<pre><code>##   id_unico_ruvte anio_denuncia   tipificacion_ruvte    apellido_paterno_nombres
+## 1           5389          1984 DESAPARICION FORZADA       ABACHIAN  JUAN CARLOS
+## 2             87          1984 DESAPARICION FORZADA          ABAD  ANA CATALINA
+## 3          11788          1984 DESAPARICION FORZADA         ABAD  JULIO RICARDO
+## 4           9907          1984            ASESINATO         ABAD  OSCAR GERARDO
+## 5             89          1984 DESAPARICION FORZADA ABAD  ROBERTO RODOLFO TOMAS
+## 6             88          1984 DESAPARICION FORZADA      ABAD  ROUMALDO RICARDO
+##   apellido_materno apellido_casada edad_al_momento_del_hecho
+## 1       BEDROSSIAN            &lt;NA&gt;                   26 años
+## 2         SCARLATA         PERUCCA                   24 años
+## 3          CORONEL            &lt;NA&gt;                   21 años
+## 4           DOMATO            &lt;NA&gt;                   25 años
+## 5           ZABALA            &lt;NA&gt;                   23 años
+## 6            ARAYA            &lt;NA&gt;                   54 años
+##   edad_al_momento_del_hecho_numerico   documentos anio_nacimiento
+## 1                                 26   LE 8293245            1950
+## 2                                 24  LC 10048122            1951
+## 3                                 21 DNI 10283544            1954
+## 4                                 25 DNI 10353245            1951
+## 5                                 23 DNI 10650064            1953
+## 6                                 54   LE 3498462            1921
+##   provincia_nacimiento pais_nacimiento nacionalidad embarazo
+## 1         BUENOS AIRES       ARGENTINA    ARGENTINA     &lt;NA&gt;
+## 2              MENDOZA       ARGENTINA    ARGENTINA     &lt;NA&gt;
+## 3              TUCUMAN       ARGENTINA    ARGENTINA     &lt;NA&gt;
+## 4         BUENOS AIRES       ARGENTINA    ARGENTINA     &lt;NA&gt;
+## 5      CAPITAL FEDERAL       ARGENTINA    ARGENTINA     &lt;NA&gt;
+## 6              TUCUMAN       ARGENTINA    ARGENTINA     &lt;NA&gt;
+##   fecha_detencion_secuestro            lugar_detencion_secuestro
+## 1                26/12/1976               LA PLATA  BUENOS AIRES
+## 2                15/08/1976            CORDOBA  CAPITAL  CORDOBA
+## 3                  NOV/1976                      CAPITAL FEDERAL
+## 4                08/10/1976               LA PLATA  BUENOS AIRES
+## 5                09/08/1976 FLORIDA  VICENTE LOPEZ  BUENOS AIRES
+## 6                04/05/1975       SANTA LUCIA  MONTEROS  TUCUMAN
+##   fecha_asesinato_o_hallazgo_de_restos
+## 1                                 &lt;NA&gt;
+## 2                                 &lt;NA&gt;
+## 3                                 &lt;NA&gt;
+## 4                           21/10/1976
+## 5                                 &lt;NA&gt;
+## 6                                 &lt;NA&gt;
+##                        lugar_asesinato_o_hallazgo_de_restos fotografia
+## 1                                                      &lt;NA&gt;         Sí
+## 2                                                      &lt;NA&gt;         Sí
+## 3                                                      &lt;NA&gt;         No
+## 4 GRAL. MANSILLA (BARTOLOME BAVIO)  MAGDALENA  BUENOS AIRES         No
+## 5                                                      &lt;NA&gt;         Sí
+## 6                                                      &lt;NA&gt;         No
+##   provincia_nacimiento_indec_id pais_nacimiento_indec_id
+## 1                            06                      ARG
+## 2                            50                      ARG
+## 3                            90                      ARG
+## 4                            06                      ARG
+## 5                            02                      ARG
+## 6                            90                      ARG</code></pre>
+<pre class="r"><code>victimas_con_denuncia |&gt;
   summarise(cantidad = n())</code></pre>
 <pre><code>##   cantidad
 ## 1     8753</code></pre>
-<pre class="r"><code>#Tiene 21 variables</code></pre>
-<pre class="r"><code>#media y desvio standar de la variable edad al momento del hecho
-victimas_con_denuncia |&gt;
+</div>
+<div id="tomaremos-para-su-lectura-las-variables" class="section level2">
+<h2>Tomaremos para su lectura, las variables:</h2>
+<ul>
+<li>Edad al momento del hecho</li>
+<li>Fecha de secuestro</li>
+<li>Fecha de asesinato o hallazgo de restos</li>
+<li>Embarazos</li>
+</ul>
+</div>
+</div>
+<div id="edad-al-momento-del-hecho" class="section level1">
+<h1>Edad al momento del hecho</h1>
+<div id="cantidad-de-observaciones-faltantes-proporcion" class="section level4">
+<h4>Cantidad de Observaciones, faltantes, proporcion</h4>
+<pre class="r"><code>victimas_con_denuncia |&gt;
+  summarise(cantidad_total = sum(!is.na(edad_al_momento_del_hecho_numerico),is.na(edad_al_momento_del_hecho_numerico)),
+            cantidad_obs = sum(!is.na(edad_al_momento_del_hecho_numerico)),
+            cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
+            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))</code></pre>
+<pre><code>##   cantidad_total cantidad_obs cantidad_nas proporcion_nas
+## 1           8753         8676           77    0.008796984</code></pre>
+<p>La proporcion de datos faltantes es pequeña, por lo que se entiende
+que la media y el sd son representativos.</p>
+</div>
+<div id="media-desvio-standar-y-rango" class="section level4">
+<h4>Media, desvio standar y rango</h4>
+<pre class="r"><code>victimas_con_denuncia |&gt;
   filter(!is.na(edad_al_momento_del_hecho_numerico))|&gt;
     summarise( 
     edad_media = mean(edad_al_momento_del_hecho_numerico),
-    edad_sd = sd(edad_al_momento_del_hecho_numerico))</code></pre>
-<pre><code>##   edad_media  edad_sd
-## 1   28.08264 9.549192</code></pre>
+    edad_sd = sd(edad_al_momento_del_hecho_numerico),
+    edad_min = min(edad_al_momento_del_hecho_numerico),
+    edad_max = max(edad_al_momento_del_hecho_numerico))</code></pre>
+<pre><code>##   edad_media  edad_sd edad_min edad_max
+## 1   28.08264 9.549192        0       81</code></pre>
+</div>
+<div id="cantidad-de-observaciones-por-edad" class="section level4">
+<h4>Cantidad de observaciones por edad</h4>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  group_by(edad_al_momento_del_hecho_numerico)|&gt;
+  summarise(cantidad = n())</code></pre>
+<pre><code>## # A tibble: 78 × 2
+##    edad_al_momento_del_hecho_numerico cantidad
+##                                 &lt;dbl&gt;    &lt;int&gt;
+##  1                                  0       47
+##  2                                  1       20
+##  3                                  2       10
+##  4                                  3       19
+##  5                                  4       11
+##  6                                  5       10
+##  7                                  6        4
+##  8                                  7        6
+##  9                                  8        7
+## 10                                  9        4
+## # … with 68 more rows</code></pre>
+</div>
+</div>
+<div id="fecha-de-secuestro" class="section level1">
+<h1>Fecha de secuestro</h1>
+<div id="cantidad-de-observaciones-faltantes-proporcion-1" class="section level4">
+<h4>Cantidad de Observaciones, faltantes, proporcion</h4>
 <pre class="r"><code>victimas_con_denuncia |&gt;
-  summarise(cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
-            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))</code></pre>
-<pre><code>##   cantidad_nas proporcion_nas
-## 1           77    0.008796984</code></pre>
-<p>La proporcion de datos faltantes es pequeña, por lo que se entiende
-que la media y el sd son representativos. No se como sacar las
-observaciones de la variable edad</p>
+  summarise(cantidad_total = sum(!is.na(fecha_detencion_secuestro),is.na(fecha_detencion_secuestro)),
+            cantidad_obs = sum(!is.na(fecha_detencion_secuestro)),
+            cantidad_nas = sum(is.na(fecha_detencion_secuestro)),
+            proporcion_nas = mean(is.na(fecha_detencion_secuestro)))</code></pre>
+<pre><code>##   cantidad_total cantidad_obs cantidad_nas proporcion_nas
+## 1           8753         7619         1134      0.1295556</code></pre>
+<p>La proporcion de datos faltantes es de un 12%, lo cual es un
+incremento importante respecto de la variable anteriormente analizada.
+Entendemos que esto responde a la dificultad en muchos casos de conocer
+la fecha exacta en la que se produjo el hecho de secuestro, desaparición
+o detención de las personas en cuestión.</p>
 </div>
-<div id="edad-al-momento-de-la-desaparicion" class="section level2">
-<h2>Edad al momento de la desaparicion</h2>
-</div>
-<div id="fecha-de-secuestro" class="section level2">
-<h2>Fecha de secuestro</h2>
+<div id="cantidad-de-observaciones-por-fecha-de-detenciónsecuestro" class="section level4">
+<h4>Cantidad de observaciones por fecha de detención/secuestro</h4>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  filter(!is.na(fecha_detencion_secuestro))|&gt;
+  group_by(fecha_detencion_secuestro)|&gt;
+  summarise(cantidad = n())</code></pre>
+<pre><code>## # A tibble: 1,685 × 2
+##    fecha_detencion_secuestro cantidad
+##    &lt;chr&gt;                        &lt;int&gt;
+##  1 02-03/04/1976                    1
+##  2 02-03/05/1978                    1
+##  3 02-03/10/1976                    1
+##  4 02-04/02/1978                    3
+##  5 02-04/11/1977                    6
+##  6 02-07/05/1977                    1
+##  7 02/01/1977                       3
+##  8 02/01/1978                       2
+##  9 02/01/1979                       1
+## 10 02/02/1976                       2
+## # … with 1,675 more rows</code></pre>
 </div>
 <div id="fecha-de-asesinato-o-hallazgo-de-restos" class="section level2">
 <h2>Fecha de asesinato o hallazgo de restos</h2>
+<div id="cantidad-de-observaciones-faltantes-proporcion-2" class="section level4">
+<h4>Cantidad de Observaciones, faltantes, proporcion</h4>
+<pre class="r"><code>victimas_con_denuncia |&gt;
+  summarise(cantidad_total = sum(!is.na(fecha_asesinato_o_hallazgo_de_restos),is.na(fecha_asesinato_o_hallazgo_de_restos)),
+            cantidad_obs = sum(!is.na(fecha_asesinato_o_hallazgo_de_restos)),
+            cantidad_nas = sum(is.na(fecha_asesinato_o_hallazgo_de_restos)),
+            proporcion_nas = mean(is.na(fecha_asesinato_o_hallazgo_de_restos)))</code></pre>
+<pre><code>##   cantidad_total cantidad_obs cantidad_nas proporcion_nas
+## 1           8753         2412         6341      0.7244373</code></pre>
+<p>La proporcion de datos faltantes es de un 72%, lo cual es un
+incremento sustancial respecto de las variables anteriormente
+analizadas. Entendemos que esto responde a la dificultad en muchos casos
+de encontrar los restos de las personas
+detenidas/asesinadas/desaparecidas.</p>
+</div>
+<div id="cantidad-de-observaciones-por-fecha-de-asesinatohallazgo-del-restos" class="section level4">
+<h4>Cantidad de observaciones por fecha de asesinato/hallazgo del
+restos</h4>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|&gt;
+  group_by(fecha_asesinato_o_hallazgo_de_restos)|&gt;
+  summarise(cantidad = n())</code></pre>
+<pre><code>## # A tibble: 881 × 2
+##    fecha_asesinato_o_hallazgo_de_restos cantidad
+##    &lt;chr&gt;                                   &lt;int&gt;
+##  1 02-05/04/1976                               1
+##  2 02/01/1976                                  1
+##  3 02/01/1977                                  4
+##  4 02/02/1976                                  1
+##  5 02/02/1977                                  8
+##  6 02/03/1976                                  1
+##  7 02/03/1977                                  4
+##  8 02/04/1976                                 12
+##  9 02/04/1977                                  2
+## 10 02/04/1978                                  3
+## # … with 871 more rows</code></pre>
+</div>
+</div>
+<div id="embarazos" class="section level2">
+<h2>Embarazos</h2>
+<div id="cantidad-de-observaciones-faltantes-proporcion-3" class="section level4">
+<h4>Cantidad de Observaciones, faltantes, proporcion</h4>
+<pre class="r"><code>victimas_con_denuncia |&gt;
+  summarise(cantidad_total = sum(!is.na(embarazo),is.na(embarazo)),
+            cantidad_obs = sum(!is.na(embarazo)),
+            cantidad_nas = sum(is.na(embarazo)),
+            proporcion_nas = mean(is.na(embarazo)))</code></pre>
+<pre><code>##   cantidad_total cantidad_obs cantidad_nas proporcion_nas
+## 1           8753          335         8418      0.9617274</code></pre>
+<p>En el caso de la variable “embarazo”, la proporción de observaciones
+sin información no resulta relevante, dado que no se conoce la
+proporción de la muestra que se encuentra en este estado.</p>
+</div>
+<div id="cantidad-de-observaciones" class="section level4">
+<h4>Cantidad de observaciones</h4>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  filter(!is.na(embarazo))|&gt;
+  group_by(embarazo)|&gt;
+  summarise(cantidad = n())</code></pre>
+<pre><code>## # A tibble: 10 × 2
+##    embarazo                                                          cantidad
+##    &lt;chr&gt;                                                                &lt;int&gt;
+##  1 &quot;EMBARAZADA&quot;                                                           284
+##  2 &quot;EMBARAZADA (aparentemente\&quot;)\&quot;&quot;                                         1
+##  3 &quot;EMBARAZADA (mellizos) / HIJA NACIDA EN CAUTIVERIO LOCALIZADA&quot;           1
+##  4 &quot;EMBARAZADA (mellizos) / HIJOS NACIDOS EN CAUTIVERIO LOCALIZADOS&quot;        1
+##  5 &quot;EMBARAZADA (probablemente\&quot;)\&quot;&quot;                                         1
+##  6 &quot;EMBARAZADA / DA A LUZ A SU HIJO SIN VIDA&quot;                               2
+##  7 &quot;EMBARAZADA / HIJA NACIDA EN CAUTIVERIO ENTREGADA A LA FAMILIA&quot;          5
+##  8 &quot;EMBARAZADA / HIJA NACIDA EN CAUTIVERIO LOCALIZADA&quot;                     19
+##  9 &quot;EMBARAZADA / HIJO NACIDO EN CAUTIVERIO LOCALIZADO&quot;                     17
+## 10 &quot;EMBARAZADA en lugar de reclusión&quot;                                       4</code></pre>
+</div>
 </div>
 <div id="hipótesis" class="section level2">
 <h2>Hipótesis</h2>
+<ol style="list-style-type: decimal">
+<li><p>Los primeros años del Proceso de Reorganización Nacional
+configuraron el momento de mayor cantidad de víctimas de procesos de
+detención/secuestro/desaparición.</p></li>
+<li><p>En los primeros años de la dictadura militar se observa mayor
+proporción de detenciones a personas jovenes, mientras que con el
+transcurrir del tiempo esa edad aumenta.</p></li>
+<li><p>¿Hubo algún momento de la dictadura en la que la proporción de
+mujeres embarazadas detenidas-desaparecidas fue mayor?</p></li>
+</ol>
 </div>
 </div>
 
