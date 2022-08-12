@@ -372,19 +372,23 @@ pre code {
 <h1>Introducción</h1>
 <p>Los datos del presente informe fueron extraidos de la librería
 “Presentes”, cuyo objetivo es poner a disposición la información oficial
-sobre víctimas del terrorismo de estado provista en:</p>
+sobre víctimas del terrorismo de estado entre 1966 y 1983 provista
+en:</p>
 <p><a href="http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte" class="uri">http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte</a><br />
 <a href="https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe" class="uri">https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe</a><br />
 <a href="http://basededatos.parquedelamemoria.org.ar/registros/" class="uri">http://basededatos.parquedelamemoria.org.ar/registros/</a></p>
 <p>De la primera pagina surgen los datos sobre victimas del accionar
 represivo ilegal que figuran en el Registro Unificado de Victimas del
-Terrorismo de Estado (RUVTE). A partir de ella se construyeron las
-tablas “victimas_apodos”, “victimas_con_denuncia” y
-“victimas_sin_denuncia”.</p>
-<p>De la segunda surge la tabla CCDyT, con la informacion de los Centros
-Clandestinos de Detencion y Tortura.</p>
-<p>De la tercera surge una nueva tabla sobre victimas de Desaparicion,
-extraida del Parque de la Memoria.</p>
+Terrorismo de Estado (RUVTE), programa que depende del Ministerio de
+Justicia y Derechos Humanos de la Nacion, creado por RES N°1261/14.
+Segun lo indicado en la pagina web, los datos fueron publicados el 30 de
+septimebre de 2016 y su ultima fecha de actualizacion fu el 11 de mayo
+de 2022.</p>
+<p>En esta oportunidad, a partir de los datos obetenidos de la pagina
+web mencionada en el parrafo anterior se construye la tabla denominada,
+“victimas_con_denuncia”. Cabe aclarar que, de la libreria “Presentes”
+pueden obtenerse otros datasets, igualmente valiosos, que podremos
+utilizar en otras instancias.</p>
 </div>
 <div id="exploración-de-los-datos" class="section level1">
 <h1>Exploración de los datos</h1>
@@ -402,67 +406,31 @@ nacionalidad, embarazo, fecha de detención/secuestro, lugar de
 detención/secuestro, fecha del asesinato o hallazgo de restos (según
 corresponda), lugar de asesinato o hallazgo de restos (según
 corresponda).</p>
-<pre class="r"><code>head(victimas_con_denuncia)</code></pre>
-<pre><code>##   id_unico_ruvte anio_denuncia   tipificacion_ruvte    apellido_paterno_nombres
-## 1           5389          1984 DESAPARICION FORZADA       ABACHIAN  JUAN CARLOS
-## 2             87          1984 DESAPARICION FORZADA          ABAD  ANA CATALINA
-## 3          11788          1984 DESAPARICION FORZADA         ABAD  JULIO RICARDO
-## 4           9907          1984            ASESINATO         ABAD  OSCAR GERARDO
-## 5             89          1984 DESAPARICION FORZADA ABAD  ROBERTO RODOLFO TOMAS
-## 6             88          1984 DESAPARICION FORZADA      ABAD  ROUMALDO RICARDO
-##   apellido_materno apellido_casada edad_al_momento_del_hecho
-## 1       BEDROSSIAN            &lt;NA&gt;                   26 años
-## 2         SCARLATA         PERUCCA                   24 años
-## 3          CORONEL            &lt;NA&gt;                   21 años
-## 4           DOMATO            &lt;NA&gt;                   25 años
-## 5           ZABALA            &lt;NA&gt;                   23 años
-## 6            ARAYA            &lt;NA&gt;                   54 años
-##   edad_al_momento_del_hecho_numerico   documentos anio_nacimiento
-## 1                                 26   LE 8293245            1950
-## 2                                 24  LC 10048122            1951
-## 3                                 21 DNI 10283544            1954
-## 4                                 25 DNI 10353245            1951
-## 5                                 23 DNI 10650064            1953
-## 6                                 54   LE 3498462            1921
-##   provincia_nacimiento pais_nacimiento nacionalidad embarazo
-## 1         BUENOS AIRES       ARGENTINA    ARGENTINA     &lt;NA&gt;
-## 2              MENDOZA       ARGENTINA    ARGENTINA     &lt;NA&gt;
-## 3              TUCUMAN       ARGENTINA    ARGENTINA     &lt;NA&gt;
-## 4         BUENOS AIRES       ARGENTINA    ARGENTINA     &lt;NA&gt;
-## 5      CAPITAL FEDERAL       ARGENTINA    ARGENTINA     &lt;NA&gt;
-## 6              TUCUMAN       ARGENTINA    ARGENTINA     &lt;NA&gt;
-##   fecha_detencion_secuestro            lugar_detencion_secuestro
-## 1                26/12/1976               LA PLATA  BUENOS AIRES
-## 2                15/08/1976            CORDOBA  CAPITAL  CORDOBA
-## 3                  NOV/1976                      CAPITAL FEDERAL
-## 4                08/10/1976               LA PLATA  BUENOS AIRES
-## 5                09/08/1976 FLORIDA  VICENTE LOPEZ  BUENOS AIRES
-## 6                04/05/1975       SANTA LUCIA  MONTEROS  TUCUMAN
-##   fecha_asesinato_o_hallazgo_de_restos
-## 1                                 &lt;NA&gt;
-## 2                                 &lt;NA&gt;
-## 3                                 &lt;NA&gt;
-## 4                           21/10/1976
-## 5                                 &lt;NA&gt;
-## 6                                 &lt;NA&gt;
-##                        lugar_asesinato_o_hallazgo_de_restos fotografia
-## 1                                                      &lt;NA&gt;         Sí
-## 2                                                      &lt;NA&gt;         Sí
-## 3                                                      &lt;NA&gt;         No
-## 4 GRAL. MANSILLA (BARTOLOME BAVIO)  MAGDALENA  BUENOS AIRES         No
-## 5                                                      &lt;NA&gt;         Sí
-## 6                                                      &lt;NA&gt;         No
-##   provincia_nacimiento_indec_id pais_nacimiento_indec_id
-## 1                            06                      ARG
-## 2                            50                      ARG
-## 3                            90                      ARG
-## 4                            06                      ARG
-## 5                            02                      ARG
-## 6                            90                      ARG</code></pre>
-<pre class="r"><code>victimas_con_denuncia |&gt;
-  summarise(cantidad = n())</code></pre>
-<pre><code>##   cantidad
-## 1     8753</code></pre>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  glimpse()</code></pre>
+<pre><code>## Rows: 8,753
+## Columns: 21
+## $ id_unico_ruvte                       &lt;chr&gt; &quot;5389&quot;, &quot;87&quot;, &quot;11788&quot;, &quot;9907&quot;, &quot;8…
+## $ anio_denuncia                        &lt;dbl&gt; 1984, 1984, 1984, 1984, 1984, 198…
+## $ tipificacion_ruvte                   &lt;chr&gt; &quot;DESAPARICION FORZADA&quot;, &quot;DESAPARI…
+## $ apellido_paterno_nombres             &lt;chr&gt; &quot;ABACHIAN  JUAN CARLOS&quot;, &quot;ABAD  A…
+## $ apellido_materno                     &lt;chr&gt; &quot;BEDROSSIAN&quot;, &quot;SCARLATA&quot;, &quot;CORONE…
+## $ apellido_casada                      &lt;chr&gt; NA, &quot;PERUCCA&quot;, NA, NA, NA, NA, NA…
+## $ edad_al_momento_del_hecho            &lt;chr&gt; &quot;26 años&quot;, &quot;24 años&quot;, &quot;21 años&quot;, …
+## $ edad_al_momento_del_hecho_numerico   &lt;dbl&gt; 26, 24, 21, 25, 23, 54, 23, 25, 2…
+## $ documentos                           &lt;chr&gt; &quot;LE 8293245&quot;, &quot;LC 10048122&quot;, &quot;DNI…
+## $ anio_nacimiento                      &lt;chr&gt; &quot;1950&quot;, &quot;1951&quot;, &quot;1954&quot;, &quot;1951&quot;, &quot;…
+## $ provincia_nacimiento                 &lt;chr&gt; &quot;BUENOS AIRES&quot;, &quot;MENDOZA&quot;, &quot;TUCUM…
+## $ pais_nacimiento                      &lt;chr&gt; &quot;ARGENTINA&quot;, &quot;ARGENTINA&quot;, &quot;ARGENT…
+## $ nacionalidad                         &lt;chr&gt; &quot;ARGENTINA&quot;, &quot;ARGENTINA&quot;, &quot;ARGENT…
+## $ embarazo                             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, N…
+## $ fecha_detencion_secuestro            &lt;chr&gt; &quot;26/12/1976&quot;, &quot;15/08/1976&quot;, &quot;NOV/…
+## $ lugar_detencion_secuestro            &lt;chr&gt; &quot;LA PLATA  BUENOS AIRES&quot;, &quot;CORDOB…
+## $ fecha_asesinato_o_hallazgo_de_restos &lt;chr&gt; NA, NA, NA, &quot;21/10/1976&quot;, NA, NA,…
+## $ lugar_asesinato_o_hallazgo_de_restos &lt;chr&gt; NA, NA, NA, &quot;GRAL. MANSILLA (BART…
+## $ fotografia                           &lt;chr&gt; &quot;Sí&quot;, &quot;Sí&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Sí&quot;, &quot;No…
+## $ provincia_nacimiento_indec_id        &lt;chr&gt; &quot;06&quot;, &quot;50&quot;, &quot;90&quot;, &quot;06&quot;, &quot;02&quot;, &quot;90…
+## $ pais_nacimiento_indec_id             &lt;chr&gt; &quot;ARG&quot;, &quot;ARG&quot;, &quot;ARG&quot;, &quot;ARG&quot;, &quot;ARG&quot;…</code></pre>
 </div>
 <div id="tomaremos-para-su-lectura-las-variables" class="section level2">
 <h2>Tomaremos para su lectura, las variables:</h2>
@@ -486,7 +454,7 @@ corresponda).</p>
 <pre><code>##   cantidad_total cantidad_obs cantidad_nas proporcion_nas
 ## 1           8753         8676           77    0.008796984</code></pre>
 <p>La proporcion de datos faltantes es pequeña, por lo que se entiende
-que la media y el sd son representativos.</p>
+que la media y el desvio estandar son representativos.</p>
 </div>
 <div id="media-desvio-standar-y-rango" class="section level4">
 <h4>Media, desvio standar y rango</h4>
@@ -499,6 +467,11 @@ que la media y el sd son representativos.</p>
     edad_max = max(edad_al_momento_del_hecho_numerico))</code></pre>
 <pre><code>##   edad_media  edad_sd edad_min edad_max
 ## 1   28.08264 9.549192        0       81</code></pre>
+<p>En un analisis rapido de los datos arrojados podemos ver que las
+victimas de secuestro y detencion ilegales durante los años 1966 y 1983
+en Argentina fue una poblacion joven. Respecto del rango que adquiere
+esta variable, cabe mencionar que los valores mas bajos representan el
+secuestro de bebes y niñes.</p>
 </div>
 <div id="cantidad-de-observaciones-por-edad" class="section level4">
 <h4>Cantidad de observaciones por edad</h4>
@@ -518,7 +491,8 @@ que la media y el sd son representativos.</p>
 ##  8                                  7        6
 ##  9                                  8        7
 ## 10                                  9        4
-## # … with 68 more rows</code></pre>
+## # … with 68 more rows
+## # ℹ Use `print(n = ...)` to see more rows</code></pre>
 </div>
 </div>
 <div id="fecha-de-secuestro" class="section level1">
@@ -537,6 +511,18 @@ incremento importante respecto de la variable anteriormente analizada.
 Entendemos que esto responde a la dificultad en muchos casos de conocer
 la fecha exacta en la que se produjo el hecho de secuestro, desaparición
 o detención de las personas en cuestión.</p>
+</div>
+<div id="rango" class="section level4">
+<h4>Rango</h4>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  summarise(fecha_min = min(fecha_detencion_secuestro),
+    fecha_max = max(fecha_detencion_secuestro))</code></pre>
+<pre><code>##   fecha_min fecha_max
+## 1      &lt;NA&gt;      &lt;NA&gt;</code></pre>
+<p>De la observacion de los datos presentes en la columna
+fecha_detencion_secuestro surge que no todas las entradas mantienen un
+criterio unificado, al mismo tiempo que el tipo de variable no permite
+ordenar y establecer valores maximos y minimos.</p>
 </div>
 <div id="cantidad-de-observaciones-por-fecha-de-detenciónsecuestro" class="section level4">
 <h4>Cantidad de observaciones por fecha de detención/secuestro</h4>
@@ -557,7 +543,8 @@ o detención de las personas en cuestión.</p>
 ##  8 02/01/1978                       2
 ##  9 02/01/1979                       1
 ## 10 02/02/1976                       2
-## # … with 1,675 more rows</code></pre>
+## # … with 1,675 more rows
+## # ℹ Use `print(n = ...)` to see more rows</code></pre>
 </div>
 <div id="fecha-de-asesinato-o-hallazgo-de-restos" class="section level2">
 <h2>Fecha de asesinato o hallazgo de restos</h2>
@@ -575,6 +562,18 @@ incremento sustancial respecto de las variables anteriormente
 analizadas. Entendemos que esto responde a la dificultad en muchos casos
 de encontrar los restos de las personas
 detenidas/asesinadas/desaparecidas.</p>
+</div>
+<div id="rango-1" class="section level4">
+<h4>Rango</h4>
+<pre class="r"><code>victimas_con_denuncia|&gt;
+  summarise(fecha_min = min(fecha_asesinato_o_hallazgo_de_restos),
+    fecha_max = max(fecha_asesinato_o_hallazgo_de_restos))</code></pre>
+<pre><code>##   fecha_min fecha_max
+## 1      &lt;NA&gt;      &lt;NA&gt;</code></pre>
+<p>De la observacion de los datos presentes en la columna
+fecha_asesinato_o_hallazgo_de_restos surge que no todas las entradas
+mantienen un criterio unificado, al mismo tiempo que el tipo de variable
+no permite ordenar y establecer valores maximos y minimos.</p>
 </div>
 <div id="cantidad-de-observaciones-por-fecha-de-asesinatohallazgo-del-restos" class="section level4">
 <h4>Cantidad de observaciones por fecha de asesinato/hallazgo del
@@ -596,7 +595,8 @@ restos</h4>
 ##  8 02/04/1976                                 12
 ##  9 02/04/1977                                  2
 ## 10 02/04/1978                                  3
-## # … with 871 more rows</code></pre>
+## # … with 871 more rows
+## # ℹ Use `print(n = ...)` to see more rows</code></pre>
 </div>
 </div>
 <div id="embarazos" class="section level2">
@@ -641,8 +641,8 @@ proporción de la muestra que se encuentra en este estado.</p>
 <li><p>Los primeros años del Proceso de Reorganización Nacional
 configuraron el momento de mayor cantidad de víctimas de procesos de
 detención/secuestro/desaparición.</p></li>
-<li><p>En los primeros años de la dictadura militar se observa mayor
-proporción de detenciones a personas jovenes, mientras que con el
+<li><p>En los primeros años de la dictadura civico militar se observa
+mayor proporción de detenciones a personas jovenes, mientras que con el
 transcurrir del tiempo esa edad aumenta.</p></li>
 <li><p>¿Hubo algún momento de la dictadura en la que la proporción de
 mujeres embarazadas detenidas-desaparecidas fue mayor?</p></li>
