@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(presentes)
+library(ggplot2)
+library(tidyr)
 ```
 
 # Introducción
@@ -46,16 +48,27 @@ victimas_con_denuncia|>
 - Embarazos
 
 
-# Edad al momento del hecho
-#### Cantidad de Observaciones, faltantes, proporcion
+### Proporcion de valores faltantes
+
 ```{r}
 victimas_con_denuncia |>
-  summarise(cantidad_total = sum(!is.na(edad_al_momento_del_hecho_numerico),is.na(edad_al_momento_del_hecho_numerico)),
-            cantidad_obs = sum(!is.na(edad_al_momento_del_hecho_numerico)),
-            cantidad_nas = sum(is.na(edad_al_momento_del_hecho_numerico)),
-            proporcion_nas = mean(is.na(edad_al_momento_del_hecho_numerico)))
+  summarise(edad_al_momento_del_hecho_numerico = mean(is.na(edad_al_momento_del_hecho_numerico)),
+            fecha_detencion_secuestro = mean(is.na(fecha_detencion_secuestro)), 
+             fecha_asesinato_o_hallazgo_de_restos = mean(is.na(fecha_asesinato_o_hallazgo_de_restos)),
+             embarazo = mean(is.na(embarazo)))|>
+  pivot_longer(cols =
+              c(`edad_al_momento_del_hecho_numerico`:`embarazo`),
+               names_to = "variables",
+               values_to = "proporcion_nas")
 ```
-La proporcion de datos faltantes es pequeña, por lo que se entiende que la media y el desvio estandar son representativos.
+
+pnas_edad : La proporcion de datos faltantes es pequeña, por lo que se entiende que la media y el desvio estandar son representativos.
+pnas_secuestro: La proporcion de datos faltantes es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
+pnas_asesinato: La proporcion de datos faltantes es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
+pnas_embarazos:En el caso de la variable "embarazo", la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
+
+
+# Edad al momento del hecho
 
 #### Media, desvio standar y rango
 ```{r}
@@ -67,26 +80,24 @@ victimas_con_denuncia |>
     edad_min = min(edad_al_momento_del_hecho_numerico),
     edad_max = max(edad_al_momento_del_hecho_numerico))
 ```
+
 En un analisis rapido de los datos arrojados podemos ver que las victimas de secuestro y detencion ilegales durante los años 1966 y 1983 en Argentina fue una poblacion joven. Respecto del rango que adquiere esta variable, cabe mencionar que los valores mas bajos representan el secuestro de bebes y niñes.
 
 #### Cantidad de observaciones por edad
+
 ```{r}
 victimas_con_denuncia|>
-  group_by(edad_al_momento_del_hecho_numerico)|>
-  summarise(cantidad = n())
+  filter(!is.na(edad_al_momento_del_hecho_numerico))|>
+  ggplot(aes(x = edad_al_momento_del_hecho_numerico))+
+  geom_histogram(binwidth = 0.5, fill = "lightblue")+
+  geom_vline(aes(xintercept = mean(edad_al_momento_del_hecho_numerico)),
+             color = "red")
 ```
+
+Este grafico muestra la distribucion de las edades de las personas victimas de secuestro y desaparicion forzada al momento del hecho. Además, se indica en rojo la media de la edad de las victimas.
 
 
 # Fecha de secuestro
-#### Cantidad de Observaciones, faltantes, proporcion
-```{r}
-victimas_con_denuncia |>
-  summarise(cantidad_total = sum(!is.na(fecha_detencion_secuestro),is.na(fecha_detencion_secuestro)),
-            cantidad_obs = sum(!is.na(fecha_detencion_secuestro)),
-            cantidad_nas = sum(is.na(fecha_detencion_secuestro)),
-            proporcion_nas = mean(is.na(fecha_detencion_secuestro)))
-```
-La proporcion de datos faltantes es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
 
 #### Rango
 ```{r}
@@ -97,24 +108,22 @@ victimas_con_denuncia|>
 De la observacion de los datos presentes en la columna fecha_detencion_secuestro surge que no todas las entradas mantienen un criterio unificado, al mismo tiempo que el tipo de variable no permite ordenar y establecer valores maximos y minimos.
 
 #### Cantidad de observaciones por fecha de detención/secuestro
+
 ```{r}
-victimas_con_denuncia|>
-  filter(!is.na(fecha_detencion_secuestro))|>
-  group_by(fecha_detencion_secuestro)|>
-  summarise(cantidad = n())
+victimas_con_denuncia |> 
+  mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
+                                     nchar(fecha_detencion_secuestro) - 1))|>
+  mutate(anio_secuestro = as.numeric(anio_secuestro))|>
+  filter(!is.na(anio_secuestro))|>
+  ggplot(aes(x = anio_secuestro))+
+  geom_histogram(binwidth = 0.5, fill = "lightblue")+
+  geom_vline(aes(xintercept = mean(anio_secuestro)),
+             color = "red")
+                                     
 ```
 
 
 ## Fecha de asesinato o hallazgo de restos
-#### Cantidad de Observaciones, faltantes, proporcion
-```{r}
-victimas_con_denuncia |>
-  summarise(cantidad_total = sum(!is.na(fecha_asesinato_o_hallazgo_de_restos),is.na(fecha_asesinato_o_hallazgo_de_restos)),
-            cantidad_obs = sum(!is.na(fecha_asesinato_o_hallazgo_de_restos)),
-            cantidad_nas = sum(is.na(fecha_asesinato_o_hallazgo_de_restos)),
-            proporcion_nas = mean(is.na(fecha_asesinato_o_hallazgo_de_restos)))
-```
-La proporcion de datos faltantes es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
 
 #### Rango
 ```{r}
@@ -134,15 +143,6 @@ victimas_con_denuncia|>
 
 
 ## Embarazos
-#### Cantidad de Observaciones, faltantes, proporcion
-```{r}
-victimas_con_denuncia |>
-  summarise(cantidad_total = sum(!is.na(embarazo),is.na(embarazo)),
-            cantidad_obs = sum(!is.na(embarazo)),
-            cantidad_nas = sum(is.na(embarazo)),
-            proporcion_nas = mean(is.na(embarazo)))
-```
-En el caso de la variable "embarazo", la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
 
 #### Cantidad de observaciones
 ```{r}
@@ -150,6 +150,21 @@ victimas_con_denuncia|>
   filter(!is.na(embarazo))|>
   group_by(embarazo)|>
   summarise(cantidad = n())
+```
+
+## Embarazos por año de secuestro
+
+```{r}
+victimas_con_denuncia |> 
+  mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
+                                     nchar(fecha_detencion_secuestro) - 1))|>
+  mutate(anio_secuestro = as.numeric(anio_secuestro))|>
+  mutate(emba = substring(embarazo,first = 1, last = 10))|>
+  filter(!is.na(anio_secuestro), !is.na(embarazo))|>
+  ggplot(aes(x = anio_secuestro))+
+  geom_histogram(binwidth = 0.25, fill = "lightblue")+
+  geom_vline(aes(xintercept = mean(anio_secuestro)),
+             color = "red")
 ```
 
 
@@ -160,3 +175,9 @@ victimas_con_denuncia|>
 2) En los primeros años de la dictadura civico militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.
 
 3) ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
+
+
+
+
+
+
