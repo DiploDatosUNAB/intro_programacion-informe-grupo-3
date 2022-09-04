@@ -61,11 +61,15 @@ victimas_con_denuncia |>
                names_to = "variables",
                values_to = "proporcion_nas")
 ```
+A partir de esta tabla podemos sacar las siguientes conclusiones:
 
-pnas_edad : La proporcion de datos faltantes es pequeña, por lo que se entiende que la media y el desvio estandar son representativos.
-pnas_secuestro: La proporcion de datos faltantes es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
-pnas_asesinato: La proporcion de datos faltantes es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
-pnas_embarazos:En el caso de la variable "embarazo", la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
+1) La proporcion de datos faltantes para la variable edad_al_momento_del_hecho_numerico es pequeña, por lo que se entiende que su media y su desvio estandar son representativos.
+
+2) La proporcion de datos faltantes para la variable fecha_detencion_secuestro es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
+
+3) La proporcion de datos faltantes para la variable fecha_asesinato_o_hallazgo_de_restos es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
+
+4) En el caso de la variable embarazo la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
 
 
 # Edad al momento del hecho
@@ -118,8 +122,7 @@ victimas_con_denuncia |>
   ggplot(aes(x = anio_secuestro))+
   geom_histogram(binwidth = 0.5, fill = "lightblue")+
   geom_vline(aes(xintercept = mean(anio_secuestro)),
-             color = "red")
-                                     
+             color = "red")    
 ```
 
 
@@ -160,7 +163,7 @@ victimas_con_denuncia |>
                                      nchar(fecha_detencion_secuestro) - 1))|>
   mutate(anio_secuestro = as.numeric(anio_secuestro))|>
   mutate(emba = substring(embarazo,first = 1, last = 10))|>
-  filter(!is.na(anio_secuestro), !is.na(embarazo))|>
+  filter(!is.na(anio_secuestro) & !is.na(embarazo))|>
   ggplot(aes(x = anio_secuestro))+
   geom_histogram(binwidth = 0.25, fill = "lightblue")+
   geom_vline(aes(xintercept = mean(anio_secuestro)),
@@ -177,7 +180,105 @@ victimas_con_denuncia |>
 3) ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
 
 
+## Hipótesis 1)
+
+1) Los primeros años del Proceso de Reorganización Nacional configuraron el momento de mayor cantidad de víctimas de procesos de detención/secuestro/desaparición.
+
+### Tabla 1
+### Cantidad y proporción de víctimas de secuestro por año
+```{r}
+hipotesis_1 <- victimas_con_denuncia |> 
+  mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
+                                     nchar(fecha_detencion_secuestro) - 1))|>
+  mutate(anio_secuestro = as.numeric(anio_secuestro))|>
+  filter(anio_secuestro >= 76 & anio_secuestro <= 83) |> 
+  group_by(anio_secuestro) |> 
+  summarise(cantidad = n()) |> 
+  summarise(anio_secuestro, cantidad, prop = cantidad/sum(cantidad)*100)
+
+hipotesis_1
+```
+
+### Gráfico 1
+### Proporción de víctimas de secuestro por año
+```{r}
+hipotesis_1 |>  
+  ggplot(aes(x = anio_secuestro, y = prop))+
+  geom_col(fill = "lightblue")
+```
+
+### Analisis Hipótesis 1
+
+A partir de la tabla y gráfico obtenidos, podemos concluir que la hipótesis planteada se corrobora. Vemos que el primer y segundo año del Procesos de Reorganización Nacional acumulan un total de 86% (6012 personas) de los secuestros/detenciones/desapariciones.
 
 
 
+## Hipótesis 2)
 
+2) En los primeros años de la dictadura civico militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.
+
+### Tabla 2
+### Media y desvío de edad al momento del secuestro por año
+```{r}
+hipotesis_2 <- victimas_con_denuncia |> 
+  mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
+                                     nchar(fecha_detencion_secuestro) - 1))|>
+  mutate(anio_secuestro = as.numeric(anio_secuestro))|>
+  filter(anio_secuestro >= 76 & anio_secuestro <= 83 & !is.na(edad_al_momento_del_hecho_numerico)) |> 
+  group_by(anio_secuestro) |> 
+  summarise(cantidad = n(), media_edad = mean(edad_al_momento_del_hecho_numerico), sd_edad = sd(edad_al_momento_del_hecho_numerico))
+
+hipotesis_2
+```
+
+
+### Gráfico 2
+### Media de edad al momento del secuestro por año
+```{r}
+hipotesis_2 |> 
+  ggplot(aes(x = anio_secuestro, y = media_edad))+
+  geom_line(color = "lightblue") +
+  geom_point(color = "red")
+```
+
+
+### Analisis Hipótesis 2
+
+A partir de la tabla obtenida, observamos que, si bien aumenta con el correr de los años la edad media de las personas detenidas, se trata de un aumento poco significativo, manteniendose hasta el 1982 dentro de un rango de 3 años.
+
+
+## Hipótesis 3)
+
+3) ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
+
+### Tabla 3
+### Proporción de víctimas de secuestro que cursaban embarazo por año
+```{r}
+hipotesis_3 <- victimas_con_denuncia |> 
+  mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
+                                     nchar(fecha_detencion_secuestro) - 1))|>
+  mutate(anio_secuestro = as.numeric(anio_secuestro))|>
+  mutate(emba = substring(embarazo,first = 1, last = 10))|>
+  filter(anio_secuestro >= 76 & anio_secuestro <= 83) |>
+  group_by(anio_secuestro) |> 
+  summarise(desap_total = n(), embarazos = sum(!is.na(emba)), prop = embarazos/desap_total*100)
+
+hipotesis_3
+```
+
+
+### Tabla 3
+### Proporción de víctimas de secuestro que cursaban embarazo por año
+```{r}
+hipotesis_3 |> 
+  filter(anio_secuestro != 82) |>
+  ggplot(aes(x = anio_secuestro, y = prop))+
+  geom_line(color = "lightblue") +
+  geom_point(color = "red")
+```
+
+Para este gráfico tomamos la decisión de sustraer el valor para el año 1982 dado que la poca cantidad de casos de desapariciones totales (6) daba por resultado un alto porcentaje de víctimas embarazadas (16%) que resulta poco representativo.
+
+### Analisis Hipótesis 3
+
+A partir de la tabla y el gráfico obtenidos observamos que 1977 es el año con mayor porporción de víctimas de secuestro que cursaban (al menos aparentemente) un embarazo. Sin embargo, para calcular dicha proporción, tomamos el total de desaparecidos/as para cada año, cuando en realidad consideramos que debieran tomarse únicamente las desaparecidas mujeres, dato del que esta base de datos no dispone.
