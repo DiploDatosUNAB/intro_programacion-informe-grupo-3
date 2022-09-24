@@ -93,9 +93,10 @@ En un analisis rapido de los datos arrojados podemos ver que las victimas de sec
 victimas_con_denuncia|>
   filter(!is.na(edad_al_momento_del_hecho_numerico))|>
   ggplot(aes(x = edad_al_momento_del_hecho_numerico))+
-  geom_histogram(binwidth = 0.5, fill = "lightblue")+
+  geom_histogram(binwidth = 1, fill = "lightblue")+
   geom_vline(aes(xintercept = mean(edad_al_momento_del_hecho_numerico)),
-             color = "red")
+             color = "red") +
+  theme_minimal()
 ```
 
 Este grafico muestra la distribucion de las edades de las personas victimas de secuestro y desaparicion forzada al momento del hecho. Además, se indica en rojo la media de la edad de las victimas.
@@ -120,9 +121,10 @@ victimas_con_denuncia |>
   mutate(anio_secuestro = as.numeric(anio_secuestro))|>
   filter(!is.na(anio_secuestro))|>
   ggplot(aes(x = anio_secuestro))+
-  geom_histogram(binwidth = 0.5, fill = "lightblue")+
+  geom_histogram(binwidth = 1, fill = "lightblue")+
   geom_vline(aes(xintercept = mean(anio_secuestro)),
-             color = "red")    
+             color = "red") +
+  theme_minimal()
 ```
 
 
@@ -165,9 +167,10 @@ victimas_con_denuncia |>
   mutate(emba = substring(embarazo,first = 1, last = 10))|>
   filter(!is.na(anio_secuestro) & !is.na(embarazo))|>
   ggplot(aes(x = anio_secuestro))+
-  geom_histogram(binwidth = 0.25, fill = "lightblue")+
+  geom_histogram(binwidth = 1, fill = "lightblue")+
   geom_vline(aes(xintercept = mean(anio_secuestro)),
-             color = "red")
+             color = "red")+
+  theme_minimal()
 ```
 
 
@@ -204,7 +207,8 @@ hipotesis_1
 ```{r}
 hipotesis_1 |>  
   ggplot(aes(x = anio_secuestro, y = prop))+
-  geom_col(fill = "lightblue")
+  geom_col(fill = "lightblue") +
+  theme_minimal()
 ```
 
 ### Analisis Hipótesis 1
@@ -233,18 +237,34 @@ hipotesis_2
 
 
 ### Gráfico 2
-### Media de edad al momento del secuestro por año
+### Media de edad al momento del secuestro por año de secuestro
 ```{r}
 hipotesis_2 |> 
   ggplot(aes(x = anio_secuestro, y = media_edad))+
   geom_line(color = "lightblue") +
-  geom_point(color = "red")
+  geom_point(color = "red") +
+  theme_minimal()
 ```
+Observamos en este gráfico que la media de la edad de personas desaparecidas en cada año aumenta. No obstante, considerando la poca cantidad de casos hacia los últimos años de la Dictadura Militar, decidimos graficar las edades de las personas desaparecidas por año de otra forma
 
+
+### Gráfico 3
+### Distribución de edades al momento del secuestro según año del hecho
+```{r}
+victimas_con_denuncia |> 
+  mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
+                                     nchar(fecha_detencion_secuestro) - 1))|>
+  mutate(anio_secuestro = as.numeric(anio_secuestro))|>
+  filter(anio_secuestro >= 76 & anio_secuestro <= 83 &
+           !is.na(edad_al_momento_del_hecho_numerico)) |> 
+  ggplot(aes(x = anio_secuestro, y = edad_al_momento_del_hecho_numerico))+
+  geom_jitter(aes(color = "red")) +
+  theme_minimal()
+```
 
 ### Analisis Hipótesis 2
 
-A partir de la tabla obtenida, observamos que, si bien aumenta con el correr de los años la edad media de las personas detenidas, se trata de un aumento poco significativo, manteniendose hasta el 1982 dentro de un rango de 3 años.
+A partir del análisis de los datos observamos que, si bien la edad media de las personas detenidas aumenta con el correr de los años, se trata de un aumento poco significativo, manteniendose hasta el 1982 dentro de un rango de 3 años. Además, observamos que a partir de 1980 la cantidad de casos totales desciende abruptamente, por lo que se dificulta el análisis de la edad como factor.
 
 
 ## Hipótesis 3)
@@ -261,7 +281,11 @@ hipotesis_3 <- victimas_con_denuncia |>
   mutate(emba = substring(embarazo,first = 1, last = 10))|>
   filter(anio_secuestro >= 76 & anio_secuestro <= 83) |>
   group_by(anio_secuestro) |> 
-  summarise(desap_total = n(), embarazos = sum(!is.na(emba)), prop = embarazos/desap_total*100)
+  summarise(desap_total = n(), embarazos = sum(!is.na(emba)), prop =
+              if(embarazos/desap_total*100>10) {
+    NA
+  }
+  else embarazos/desap_total*100)
 
 hipotesis_3
 ```
@@ -271,10 +295,10 @@ hipotesis_3
 ### Proporción de víctimas de secuestro que cursaban embarazo por año
 ```{r}
 hipotesis_3 |> 
-  filter(anio_secuestro != 82) |>
   ggplot(aes(x = anio_secuestro, y = prop))+
   geom_line(color = "lightblue") +
-  geom_point(color = "red")
+  geom_point(color = "red") +
+  theme_minimal()
 ```
 
 Para este gráfico tomamos la decisión de sustraer el valor para el año 1982 dado que la poca cantidad de casos de desapariciones totales (6) daba por resultado un alto porcentaje de víctimas embarazadas (16%) que resulta poco representativo.
