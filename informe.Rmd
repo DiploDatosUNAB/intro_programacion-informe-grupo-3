@@ -1,12 +1,15 @@
 ---
-title: "TP N°1"
+title: "Trabajo Final - Introduccion a la Programacion"
 author: "Joaquina Altamirano y Federico Montagna"
-output: html_document
+output:
+ html_document:
+   code_folding: hide
+date: "27/09/2022"
 ---
 
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
 library(dplyr)
 library(presentes)
 library(ggplot2)
@@ -15,26 +18,25 @@ library(tidyr)
 
 # Introducción
 
-Los datos del presente informe fueron extraidos de la librería "Presentes", cuyo objetivo es poner a disposición la información oficial sobre víctimas del terrorismo de estado entre 1966 y 1983 provista en:
+Los datos del presente informe fueron extraidos de la librería *"Presentes"*, cuyo objetivo es poner a disposición la información oficial sobre víctimas del terrorismo de estado entre 1966 y 1983 provista en:
 
-http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte  
-https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe  
-http://basededatos.parquedelamemoria.org.ar/registros/ 
+<http://datos.jus.gob.ar/dataset/registro-unificado-de-victimas-del-terrorismo-de-estado-ruvte>\
+<https://www.argentina.gob.ar/sitiosdememoria/ruvte/informe>\
+<http://basededatos.parquedelamemoria.org.ar/registros/>
 
-De la primera pagina surgen los datos sobre victimas del accionar represivo ilegal que figuran en el Registro Unificado de Victimas del Terrorismo de Estado (RUVTE), programa que depende del Ministerio de Justicia y Derechos Humanos de la Nacion, creado por RES N°1261/14. Segun lo indicado en la pagina web, los datos fueron publicados el 30 de septimebre de 2016 y su ultima fecha de actualizacion fu el 11 de mayo de 2022.
+De la primera pagina surgen los datos sobre victimas del accionar represivo ilegal que figuran en el *Registro Unificado de Victimas del Terrorismo de Estado* (RUVTE), programa que depende del Ministerio de Justicia y Derechos Humanos de la Nacion, creado por RES N°1261/14. Segun lo indicado en la pagina web, los datos fueron publicados el 30 de septimebre de 2016 y su ultima fecha de actualizacion fu el 11 de mayo de 2022.
 
-En esta oportunidad, a partir de los datos obetenidos de la pagina web mencionada en el parrafo anterior se construye la tabla denominada, "victimas_con_denuncia". Cabe aclarar que, de la libreria "Presentes" pueden obtenerse otros datasets, igualmente valiosos, que podremos utilizar en otras instancias. 
-
+En esta oportunidad, a partir de los datos obetenidos de la pagina web mencionada en el parrafo anterior se construye la tabla denominada, `victimas_con_denuncia`. Cabe aclarar que, de la libreria *"Presentes"* pueden obtenerse otros datasets, igualmente valiosos, que podremos utilizar en otras instancias.
 
 # Exploración de los datos
 
-```{r}
+```{r echo=TRUE}
 victimas_con_denuncia <- presentes::victimas_accionar_represivo_ilegal
 ```
 
-## Base Victimas_con_denuncia
-Para el presente TP, seleccionamos la base "victimas_con_denuncia", la cual conforma una tabla con 21 columnas y 8753 observaciones. Las 21 columnas estan conformadas por las variables: Año en que se realiza la denuncia, tipificación según el RUVTE, nombre y apellido paterno, apellido materno, apellido de casada, edad al momento del hecho, numero de documento, año de nacimiento, provincia de nacimiento (se encuentra de dos formas, una de acuerdo al INDEC), país de nacimiento (idem), nacionalidad, embarazo, fecha de detención/secuestro, lugar de detención/secuestro, fecha del asesinato o hallazgo de restos (según corresponda), lugar de asesinato o hallazgo de restos (según corresponda).
+## Base `victimas_con_denuncia`
 
+Para el presente trabajo, seleccionamos la base `victimas_con_denuncia`, la cual conforma una tabla con 21 columnas y 8753 observaciones. Las 21 columnas estan conformadas por las variables: Año en que se realiza la denuncia, tipificación según el RUVTE, nombre y apellido paterno, apellido materno, apellido de casada, edad al momento del hecho, numero de documento, año de nacimiento, provincia de nacimiento (se encuentra de dos formas, una de acuerdo al INDEC), país de nacimiento (idem), nacionalidad, embarazo, fecha de detención/secuestro, lugar de detención/secuestro, fecha del asesinato o hallazgo de restos (según corresponda), lugar de asesinato o hallazgo de restos (según corresponda).
 
 ```{r}
 victimas_con_denuncia|>
@@ -42,13 +44,11 @@ victimas_con_denuncia|>
 ```
 
 ## Tomaremos para su lectura, las variables:
-- Edad al momento del hecho
-- Fecha de secuestro
-- Fecha de asesinato o hallazgo de restos
-- Embarazos
 
-
-### Proporcion de valores faltantes
+-   Edad al momento del hecho
+-   Fecha de secuestro
+-   Fecha de asesinato o hallazgo de restos
+-   Embarazos
 
 ```{r}
 victimas_con_denuncia |>
@@ -58,23 +58,25 @@ victimas_con_denuncia |>
              embarazo = mean(is.na(embarazo)))|>
   pivot_longer(cols =
               c(`edad_al_momento_del_hecho_numerico`:`embarazo`),
-               names_to = "variables",
-               values_to = "proporcion_nas")
+               names_to = "Variables",
+               values_to = "Proporcion_NAs")|>
+gt::gt(caption = "Proporción valores faltantes")
 ```
-A partir de esta tabla podemos sacar las siguientes conclusiones:
 
-1) La proporcion de datos faltantes para la variable edad_al_momento_del_hecho_numerico es pequeña, por lo que se entiende que su media y su desvio estandar son representativos.
+A partir de esta tabla que muestra la proporcion de valores faltantes podemos sacar las siguientes conclusiones:
 
-2) La proporcion de datos faltantes para la variable fecha_detencion_secuestro es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
+1)  La proporcion de datos faltantes para la variable `edad_al_momento_del_hecho_numerico` es pequeña, por lo que se entiende que su media y su desvio estandar son representativos.
 
-3) La proporcion de datos faltantes para la variable fecha_asesinato_o_hallazgo_de_restos es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
+2)  La proporcion de datos faltantes para la variable `fecha_detencion_secuestro` es de un 12%, lo cual es un incremento importante respecto de la variable anteriormente analizada. Entendemos que esto responde a la dificultad en muchos casos de conocer la fecha exacta en la que se produjo el hecho de secuestro, desaparición o detención de las personas en cuestión.
 
-4) En el caso de la variable embarazo la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
+3)  La proporcion de datos faltantes para la variable `fecha_asesinato_o_hallazgo_de_restos` es de un 72%, lo cual es un incremento sustancial respecto de las variables anteriormente analizadas. Entendemos que esto responde a la dificultad en muchos casos de encontrar los restos de las personas detenidas/asesinadas/desaparecidas.
 
+4)  En el caso de la variable `embarazo` la proporción de observaciones sin información no resulta relevante, dado que no se conoce la proporción de la muestra que se encuentra en este estado.
 
-# Edad al momento del hecho
+### Edad al momento del hecho
 
 #### Media, desvio standar y rango
+
 ```{r}
 victimas_con_denuncia |>
   filter(!is.na(edad_al_momento_del_hecho_numerico))|>
@@ -82,14 +84,15 @@ victimas_con_denuncia |>
     edad_media = mean(edad_al_momento_del_hecho_numerico),
     edad_sd = sd(edad_al_momento_del_hecho_numerico),
     edad_min = min(edad_al_momento_del_hecho_numerico),
-    edad_max = max(edad_al_momento_del_hecho_numerico))
+    edad_max = max(edad_al_momento_del_hecho_numerico))|>
+  gt::gt ()
 ```
 
 En un analisis rapido de los datos arrojados podemos ver que las victimas de secuestro y detencion ilegales durante los años 1966 y 1983 en Argentina fue una poblacion joven. Respecto del rango que adquiere esta variable, cabe mencionar que los valores mas bajos representan el secuestro de bebes y niñes.
 
 #### Cantidad de observaciones por edad
 
-```{r}
+```{r, fig.cap= "Figura 1: Observaciones por edad"}
 victimas_con_denuncia|>
   filter(!is.na(edad_al_momento_del_hecho_numerico))|>
   ggplot(aes(x = edad_al_momento_del_hecho_numerico))+
@@ -101,20 +104,22 @@ victimas_con_denuncia|>
 
 Este grafico muestra la distribucion de las edades de las personas victimas de secuestro y desaparicion forzada al momento del hecho. Además, se indica en rojo la media de la edad de las victimas.
 
-
-# Fecha de secuestro
+### Fecha de secuestro
 
 #### Rango
+
 ```{r}
 victimas_con_denuncia|>
   summarise(fecha_min = min(fecha_detencion_secuestro),
-    fecha_max = max(fecha_detencion_secuestro))
+    fecha_max = max(fecha_detencion_secuestro))|>
+gt::gt(caption = "Rango: secuestros")
 ```
+
 De la observacion de los datos presentes en la columna fecha_detencion_secuestro surge que no todas las entradas mantienen un criterio unificado, al mismo tiempo que el tipo de variable no permite ordenar y establecer valores maximos y minimos.
 
 #### Cantidad de observaciones por fecha de detención/secuestro
 
-```{r}
+```{r, fig.cap= "Figura 2: Observaciones por fecha de detención/secuestro"}
 victimas_con_denuncia |> 
   mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
                                      nchar(fecha_detencion_secuestro) - 1))|>
@@ -127,39 +132,44 @@ victimas_con_denuncia |>
   theme_minimal()
 ```
 
-
-## Fecha de asesinato o hallazgo de restos
+### Fecha de asesinato o hallazgo de restos
 
 #### Rango
+
 ```{r}
 victimas_con_denuncia|>
   summarise(fecha_min = min(fecha_asesinato_o_hallazgo_de_restos),
-    fecha_max = max(fecha_asesinato_o_hallazgo_de_restos))
+    fecha_max = max(fecha_asesinato_o_hallazgo_de_restos))|>
+gt::gt()
 ```
-De la observacion de los datos presentes en la columna fecha_asesinato_o_hallazgo_de_restos surge que no todas las entradas mantienen un criterio unificado, al mismo tiempo que el tipo de variable no permite ordenar y establecer valores maximos y minimos.
+
+De la observacion de los datos presentes en la columna `fecha_asesinato_o_hallazgo_de_restos` surge que no todas las entradas mantienen un criterio unificado, al mismo tiempo que el tipo de variable no permite ordenar y establecer valores maximos y minimos.
 
 #### Cantidad de observaciones por fecha de asesinato/hallazgo del restos
+
 ```{r}
 victimas_con_denuncia|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)|>
-  summarise(cantidad = n())
+  rename(Fecha = fecha_asesinato_o_hallazgo_de_restos)|>
+  summarise(Cantidad = n())
 ```
 
-
-## Embarazos
+### Embarazos
 
 #### Cantidad de observaciones
+
 ```{r}
 victimas_con_denuncia|>
   filter(!is.na(embarazo))|>
   group_by(embarazo)|>
-  summarise(cantidad = n())
+  summarise(cantidad = n())|>
+  gt::gt()
 ```
 
-## Embarazos por año de secuestro
+#### Embarazos por año de secuestro
 
-```{r}
+```{r, fig.cap= "Figura 3: Embarazos por año de secuestro"}
 victimas_con_denuncia |> 
   mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
                                      nchar(fecha_detencion_secuestro) - 1))|>
@@ -173,22 +183,20 @@ victimas_con_denuncia |>
   theme_minimal()
 ```
 
+# Hipótesis
 
-## Hipótesis
+1)  Los primeros años del **Proceso de Reorganización Nacional** configuraron el momento de mayor cantidad de víctimas de procesos de detención/secuestro/desaparición.
 
-1) Los primeros años del Proceso de Reorganización Nacional configuraron el momento de mayor cantidad de víctimas de procesos de detención/secuestro/desaparición.
+2)  En los primeros años de la dictadura civico militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.
 
-2) En los primeros años de la dictadura civico militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.
+3)  ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
 
-3) ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
+## Hipótesis 1
 
-
-## Hipótesis 1)
-
-1) Los primeros años del Proceso de Reorganización Nacional configuraron el momento de mayor cantidad de víctimas de procesos de detención/secuestro/desaparición.
+*1) Los primeros años del Proceso de Reorganización Nacional configuraron el momento de mayor cantidad de víctimas de procesos de detención/secuestro/desaparición.*
 
 ### Tabla 1
-### Cantidad y proporción de víctimas de secuestro por año
+
 ```{r}
 hipotesis_1 <- victimas_con_denuncia |> 
   mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
@@ -199,12 +207,16 @@ hipotesis_1 <- victimas_con_denuncia |>
   summarise(cantidad = n()) |> 
   summarise(anio_secuestro, cantidad, prop = cantidad/sum(cantidad)*100)
 
-hipotesis_1
+hipotesis_1|>
+  gt::gt(caption = "Hipótesis 1: cantidad y proporcion de victimas de secuestro por año")
+
 ```
 
 ### Gráfico 1
-### Proporción de víctimas de secuestro por año
-```{r}
+
+#### Proporción de víctimas de secuestro por año
+
+```{r, fig.cap= "Figura 4: Proporcion victimas de secuestro por año"}
 hipotesis_1 |>  
   ggplot(aes(x = anio_secuestro, y = prop))+
   geom_col(fill = "lightblue") +
@@ -213,16 +225,14 @@ hipotesis_1 |>
 
 ### Analisis Hipótesis 1
 
-A partir de la tabla y gráfico obtenidos, podemos concluir que la hipótesis planteada se corrobora. Vemos que el primer y segundo año del Procesos de Reorganización Nacional acumulan un total de 86% (6012 personas) de los secuestros/detenciones/desapariciones.
+**A partir de la tabla y gráfico obtenidos, podemos concluir que la hipótesis planteada se corrobora. Vemos que el primer y segundo año del Proceso de Reorganización Nacional acumulan un total de 86% (6012 personas) de los secuestros/detenciones/desapariciones.**
 
+## Hipótesis 2
 
-
-## Hipótesis 2)
-
-2) En los primeros años de la dictadura civico militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.
+*2)  En los primeros años de la dictadura civico militar se observa mayor proporción de detenciones a personas jovenes, mientras que con el transcurrir del tiempo esa edad aumenta.*
 
 ### Tabla 2
-### Media y desvío de edad al momento del secuestro por año
+
 ```{r}
 hipotesis_2 <- victimas_con_denuncia |> 
   mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
@@ -232,25 +242,30 @@ hipotesis_2 <- victimas_con_denuncia |>
   group_by(anio_secuestro) |> 
   summarise(cantidad = n(), media_edad = mean(edad_al_momento_del_hecho_numerico), sd_edad = sd(edad_al_momento_del_hecho_numerico))
 
-hipotesis_2
+hipotesis_2|>
+  gt::gt(caption = "Hipótesis 2: Media y desvio de la edad al momento de secuestro por año")
+
 ```
 
-
 ### Gráfico 2
-### Media de edad al momento del secuestro por año de secuestro
-```{r}
+
+#### Media de edad al momento del secuestro por año de secuestro
+
+```{r, fig.cap= "Figura 5: Media de edad al momento del secuestro por año"}
 hipotesis_2 |> 
   ggplot(aes(x = anio_secuestro, y = media_edad))+
   geom_line(color = "lightblue") +
   geom_point(color = "red") +
   theme_minimal()
 ```
+
 Observamos en este gráfico que la media de la edad de personas desaparecidas en cada año aumenta. No obstante, considerando la poca cantidad de casos hacia los últimos años de la Dictadura Militar, decidimos graficar las edades de las personas desaparecidas por año de otra forma
 
-
 ### Gráfico 3
-### Distribución de edades al momento del secuestro según año del hecho
-```{r}
+
+#### Distribución de edades al momento del secuestro según año del hecho
+
+```{r, fig.cap= "Fugura 6: Distribucion de edades segun año de secuestro"}
 victimas_con_denuncia |> 
   mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
                                      nchar(fecha_detencion_secuestro) - 1))|>
@@ -258,21 +273,22 @@ victimas_con_denuncia |>
   filter(anio_secuestro >= 76 & anio_secuestro <= 83 &
            !is.na(edad_al_momento_del_hecho_numerico)) |> 
   ggplot(aes(x = anio_secuestro, y = edad_al_momento_del_hecho_numerico))+
-  geom_jitter(aes(color = "red")) +
+  geom_jitter(aes(color = "red"))+
   theme_minimal()
+  
 ```
 
 ### Analisis Hipótesis 2
 
-A partir del análisis de los datos observamos que, si bien la edad media de las personas detenidas aumenta con el correr de los años, se trata de un aumento poco significativo, manteniendose hasta el 1982 dentro de un rango de 3 años. Además, observamos que a partir de 1980 la cantidad de casos totales desciende abruptamente, por lo que se dificulta el análisis de la edad como factor.
+**A partir del análisis de los datos observamos que, si bien la edad media de las personas detenidas aumenta con el correr de los años, se trata de un aumento poco significativo, manteniendose hasta el 1982 dentro de un rango de 3 años. Además, observamos que a partir de 1980 la cantidad de casos totales desciende abruptamente, por lo que se dificulta el análisis de la edad como factor.**
 
 
-## Hipótesis 3)
+## Hipótesis 3
 
-3) ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?
+*3)  ¿Hubo algún momento de la dictadura en la que la proporción de mujeres embarazadas detenidas-desaparecidas fue mayor?*
 
 ### Tabla 3
-### Proporción de víctimas de secuestro que cursaban embarazo por año
+
 ```{r}
 hipotesis_3 <- victimas_con_denuncia |> 
   mutate(anio_secuestro = substring(fecha_detencion_secuestro, 
@@ -287,13 +303,15 @@ hipotesis_3 <- victimas_con_denuncia |>
   }
   else embarazos/desap_total*100)
 
-hipotesis_3
+hipotesis_3|>
+  gt::gt(caption = "Hipótesis 3: Proporción de victimas de secuestro que cursaban embarazos por año")
 ```
 
+### Gráfico 4
 
-### Tabla 3
-### Proporción de víctimas de secuestro que cursaban embarazo por año
-```{r}
+#### Proporción de víctimas de secuestro que cursaban embarazo por año
+
+```{r, fig.cap= "Figura 7: Proporcion de victimas que cursaban embarazo por año"}
 hipotesis_3 |> 
   ggplot(aes(x = anio_secuestro, y = prop))+
   geom_line(color = "lightblue") +
@@ -305,4 +323,4 @@ Para este gráfico tomamos la decisión de sustraer el valor para el año 1982 d
 
 ### Analisis Hipótesis 3
 
-A partir de la tabla y el gráfico obtenidos observamos que 1977 es el año con mayor porporción de víctimas de secuestro que cursaban (al menos aparentemente) un embarazo. Sin embargo, para calcular dicha proporción, tomamos el total de desaparecidos/as para cada año, cuando en realidad consideramos que debieran tomarse únicamente las desaparecidas mujeres, dato del que esta base de datos no dispone.
+**A partir de la tabla y el gráfico obtenidos observamos que 1977 es el año con mayor porporción de víctimas de secuestro que cursaban (al menos aparentemente) un embarazo. Sin embargo, para calcular dicha proporción, tomamos el total de desaparecidos/as para cada año, cuando en realidad consideramos que debieran tomarse únicamente las desaparecidas mujeres, dato del que esta base de datos no dispone.**
